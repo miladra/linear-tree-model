@@ -1,6 +1,7 @@
 package com.tradeshift.codingchallenge.api;
 
-import com.tradeshift.codingchallenge.servieapi.StructureService;
+import com.tradeshift.codingchallenge.entity.TreeNode;
+import com.tradeshift.codingchallenge.servieapi.TreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,11 @@ public class ApiStructure {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiStructure.class);
 
     @Autowired
-    protected StructureService structureService;
+    protected TreeService structureService;
 
-    @RequestMapping(value = "/structure/{structureId}", method = RequestMethod.GET, produces = "application/json")
-    public String getStructure(@PathVariable String structureId) {
-        return structureService.getStructure(structureId);
+    @RequestMapping(value = "/structure/{treeNodeId}", method = RequestMethod.GET, produces = "application/json")
+    public TreeNode getStructure(@PathVariable long treeNodeId) {
+        return structureService.findById(treeNodeId);
     }
 
 }

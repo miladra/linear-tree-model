@@ -2,8 +2,10 @@ package com.tradeshift.codingchallenge.servieapi;
 
 import com.tradeshift.codingchallenge.entity.TreeNode;
 
-public interface TreeService {
-    TreeNode findById(Long treeNodeId);
+import java.util.ArrayList;
+
+public interface TreeNodeService {
+    ArrayList<String> findByName(String name);
     void updateTreeNode(TreeNode treeNode);
     void add(TreeNode treeNode);
 }

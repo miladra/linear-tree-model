@@ -2,17 +2,17 @@ package com.tradeshift.codingchallenge.Service;
 
 import com.tradeshift.codingchallenge.common.exception.NotFoundException;
 import com.tradeshift.codingchallenge.entity.TreeNode;
-import com.tradeshift.codingchallenge.repositoryapi.TreeNodeRepository;
-import com.tradeshift.codingchallenge.servieapi.TreeService;
+import com.tradeshift.codingchallenge.repository.TreeNodeRepository;
+import com.tradeshift.codingchallenge.servieapi.TreeNodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
-public class TreeNodeServiceImpl implements TreeService {
+public class TreeNodeServiceImpl implements TreeNodeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TreeNodeServiceImpl.class);
 
     protected static final String STRUCTURE_NOT_FOUND_MESSAGE_KEY = "PROCESS.ERROR.NOT-FOUND";
@@ -21,16 +21,17 @@ public class TreeNodeServiceImpl implements TreeService {
     protected TreeNodeRepository treeNodeRepository;
 
     @Override
-    public TreeNode findById(Long treeNodeId) {
-        Optional<TreeNode> treeNode = treeNodeRepository.findById(treeNodeId);
+    public ArrayList<String> findByName(String name) {
+        ArrayList<String> treeNodes = treeNodeRepository.findTreeNodeByName(name);
 
-        if (treeNode == null) {
-            NotFoundException structureNotFound = new NotFoundException("No structure found with the given id: " + treeNodeId);
+        if (treeNodes.isEmpty()) {
+            NotFoundException structureNotFound = new NotFoundException("No tree Node found with the given id: " + name);
             throw structureNotFound;
         }
 
-        return treeNode.get();
+        return treeNodes;
     }
+
 
     @Override
     public void updateTreeNode(TreeNode treeNode) {

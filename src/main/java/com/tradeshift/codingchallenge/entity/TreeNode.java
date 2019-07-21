@@ -9,13 +9,16 @@ public class TreeNode extends BaseEntity{
 
     public TreeNode() {}
 
-    public TreeNode(Boolean isRoot, Long parentId, Long leftNodeId ,  Long rightNodeId) {
+    public TreeNode(Boolean isRoot, Long parentId, Long leftNodeId ,  Long rightNodeId , String name) {
         this.isRoot = isRoot;
         this.ParentId = parentId;
         this.LeftNodeId = leftNodeId;
         this.RightNodeId = rightNodeId;
+        this.name = name;
     }
     private Boolean isRoot;
+
+    private  String name;
 
     private Long ParentId;
 
@@ -23,7 +26,7 @@ public class TreeNode extends BaseEntity{
 
     private Long RightNodeId;
 
-    @Column(name="IsRoot")
+    @Column(name="isRoot")
     public Boolean getIsRoot() {
         return isRoot;
     }
@@ -43,7 +46,12 @@ public class TreeNode extends BaseEntity{
         return RightNodeId;
     }
 
-    public void setRoot(Boolean root) {
+    @Column(name="Name")
+    public String getName() {
+        return name;
+    }
+
+    public void setIsRoot(Boolean root) {
         isRoot = root;
     }
 
@@ -58,6 +66,8 @@ public class TreeNode extends BaseEntity{
     public void setRightNodeId(Long rightNodeId) {
         RightNodeId = rightNodeId;
     }
+
+    public void setName(String name) { this.name = name; }
 }
 
 

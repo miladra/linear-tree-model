@@ -5,8 +5,9 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
+/*@Configuration
 @EnableTransactionManagement
-@ComponentScans(value = { @ComponentScan("com.tradeshift.codingchallenge")})
+@ComponentScans(value = { @ComponentScan("com.tradeshift.codingchallenge")})*/
 public class AppConfig {
 }
+

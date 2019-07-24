@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.application;
+package com.tradeshift.codingchallenge;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -10,7 +10,7 @@ public abstract class BaseEntity implements Cloneable, Serializable {
     private long id;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     public long getId() {
         return this.id;

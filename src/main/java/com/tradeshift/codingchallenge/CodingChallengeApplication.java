@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.application;
+package com.tradeshift.codingchallenge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

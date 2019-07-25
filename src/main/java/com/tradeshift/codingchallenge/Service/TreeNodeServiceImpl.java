@@ -24,6 +24,9 @@ public class TreeNodeServiceImpl implements TreeNodeService {
 
     @Override
     public ArrayList<String> findTreeNodeByName(String name) {
+        if(name.isEmpty() || name.equals("")){
+
+        }
         ArrayList<String> treeNodes = treeNodeRepository.findTreeNodeByName(name);
 
         if (treeNodes.isEmpty()) {

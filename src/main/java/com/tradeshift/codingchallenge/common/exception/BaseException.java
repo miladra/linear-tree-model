@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.exception;
+package com.tradeshift.codingchallenge.common.exception;
 
 public class BaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;

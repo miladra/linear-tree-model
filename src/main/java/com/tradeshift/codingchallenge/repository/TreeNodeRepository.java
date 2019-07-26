@@ -25,10 +25,10 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + 2 WHERE node.rightNodeId > :rightNodeId")
-    void UpdateRightId(Long rightNodeId);
+    void UpdateRightId(@Param("rightNodeId") Long rightNodeId);
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId + 2 WHERE node.leftNodeId > :rightNodeId")
-    void UpdateLefttId(Long rightNodeId);
+    void UpdateLeftId(@Param("rightNodeId") Long rightNodeId);
 
 }

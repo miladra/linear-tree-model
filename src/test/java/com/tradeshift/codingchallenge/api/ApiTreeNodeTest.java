@@ -29,11 +29,13 @@ public class ApiTreeNodeTest {
     public void getNotExistTreeNode() {
 
             String searchNode = "notExistNode";
-            String saveUrl = "http://localhost:" + serverPort + "/rest/treeNode/v1/" + searchNode;
+            String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/" + searchNode;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
             HttpEntity<?> request = new HttpEntity<>(headers);
             ResponseEntity<Object> result = restTemplate.exchange(saveUrl, HttpMethod.GET, request, Object.class);
+
+
 
             assertThat(result.getStatusCode())
                     .as("GET API Node")
@@ -46,7 +48,7 @@ public class ApiTreeNodeTest {
     @Test
     public void getAllNodeTreeNode() {
 
-        String saveUrl = "http://localhost:" + serverPort + "/rest/treeNode/v1/A";
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/A";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
@@ -67,7 +69,7 @@ public class ApiTreeNodeTest {
     @Test
     public void addTreeNode() {
 
-        String saveUrl = "http://localhost:" + serverPort + "/rest/treeNode/v1/add";
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/add";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 

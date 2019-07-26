@@ -51,7 +51,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
 
             //move all next mode after Node
             treeNodeRepository.UpdateRightId(afterTreeNode.getRightNodeId());
-            treeNodeRepository.UpdateLefttId(afterTreeNode.getRightNodeId());
+            treeNodeRepository.UpdateLeftId(afterTreeNode.getRightNodeId());
 
             //Create new node
             TreeNode treeNode = new TreeNode();

@@ -1,73 +1,119 @@
 package com.tradeshift.codingchallenge.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="TreeNode")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class TreeNode extends BaseEntity{
 
     public TreeNode() {}
 
-    public TreeNode(Boolean isRoot, Long parentId, Long leftNodeId ,  Long rightNodeId , String name) {
-        this.isRoot = isRoot;
-        this.ParentId = parentId;
-        this.LeftNodeId = leftNodeId;
-        this.RightNodeId = rightNodeId;
+    public TreeNode(String name, Long leftNodeId , Long rightNodeId) {
+        this.leftNodeId = leftNodeId;
+        this.rightNodeId = rightNodeId;
         this.name = name;
-    }
-    private Boolean isRoot;
-
-    private  String name;
-
-    private Long ParentId;
-
-    private Long LeftNodeId;
-
-    private Long RightNodeId;
-
-    @Column(name="isRoot")
-    public Boolean getIsRoot() {
-        return isRoot;
-    }
-
-    @Column(name="ParentId")
-    public Long getParentId() {
-        return ParentId;
-    }
-
-    @Column(name="LeftNodeId")
-    public Long getLeftNodeId() {
-        return LeftNodeId;
-    }
-
-    @Column(name="RightNodeId")
-    public Long getRightNodeId() {
-        return RightNodeId;
     }
 
     @Column(name="Name")
+    private String name;
+
+    @Column(name="LeftNodeId")
+    private Long leftNodeId;
+
+    @Column(name="RightNodeId")
+    private Long rightNodeId;
+
+    @Column(name="height")
+    private Long height;
+
+    @OneToMany(mappedBy="parentNode" , fetch=FetchType.EAGER)
+    private Set<TreeNode> subNodes;
+
+    @ManyToOne
+    @JoinColumn(name="parentId" ,referencedColumnName = "id" )
+    private TreeNode parentNode;
+
+    ///
+
+    @OneToMany(mappedBy="rootNode" , fetch=FetchType.LAZY)
+    private Set<TreeNode> subRootNodes;
+
+    @ManyToOne
+    @JoinColumn(name="rootId" ,referencedColumnName = "id" )
+    private TreeNode rootNode;
+
+
     public String getName() {
         return name;
     }
 
-    public void setIsRoot(Boolean root) {
-        isRoot = root;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setParentId(Long parentId) {
-        ParentId = parentId;
+    public Long getLeftNodeId() {
+        return leftNodeId;
     }
 
     public void setLeftNodeId(Long leftNodeId) {
-        LeftNodeId = leftNodeId;
+        this.leftNodeId = leftNodeId;
+    }
+
+    public Long getRightNodeId() {
+        return rightNodeId;
     }
 
     public void setRightNodeId(Long rightNodeId) {
-        RightNodeId = rightNodeId;
+        this.rightNodeId = rightNodeId;
     }
 
-    public void setName(String name) { this.name = name; }
+    public Long getHeight() {
+        return height;
+    }
+
+    public void setHeight(Long height) {
+        this.height = height;
+    }
+
+    public Set<TreeNode> getSubNodes() {
+        return subNodes;
+    }
+
+    public void setSubNodes(Set<TreeNode> subNodes) {
+        this.subNodes = subNodes;
+    }
+
+    public TreeNode getParentNode() {
+        return parentNode;
+    }
+
+    public void setParentNode(TreeNode parentNode) {
+        this.parentNode = parentNode;
+    }
+
+    public Set<TreeNode> getSubRootNodes() {
+        return subRootNodes;
+    }
+
+    public void setSubRootNodes(Set<TreeNode> subRootNodes) {
+        this.subRootNodes = subRootNodes;
+    }
+
+    public TreeNode getRootNode() {
+        return rootNode;
+    }
+
+    public void setRootNode(TreeNode rootNode) {
+        this.rootNode = rootNode;
+    }
 }
 
 

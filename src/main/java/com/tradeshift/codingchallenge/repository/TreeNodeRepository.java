@@ -17,18 +17,29 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     List<TreeNode> findByName(String name);
 
-    @Query("SELECT node.name " +
-           "FROM TreeNode AS node, TreeNode AS parent " +
+    @Query("SELECT node " +
+           "FROM TreeNode as node , TreeNode as parent " +
            "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId AND parent.name = :nodeName  " +
            "ORDER BY node.leftNodeId")
-    ArrayList<String> findTreeNodeByName(@Param("nodeName") String nodeName);
+    List<TreeNode> findTreeNodeByName(@Param("nodeName") String nodeName);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + 2 WHERE node.rightNodeId > :rightNodeId")
-    void UpdateRightId(@Param("rightNodeId") Long rightNodeId);
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + 2 WHERE node.rightNodeId > :nodeId")
+    void UpdateRightId(@Param("nodeId") Long nodeId);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId + 2 WHERE node.leftNodeId > :rightNodeId")
-    void UpdateLeftId(@Param("rightNodeId") Long rightNodeId);
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId + 2 WHERE node.leftNodeId > :nodeId")
+    void UpdateLeftId(@Param("nodeId") Long nodeId);
 
+    @Modifying
+    @Query("DELETE FROM TreeNode AS node WHERE node.leftNodeId BETWEEN :leftNodeId AND :rightNodeId")
+    void DeleteBetweenLeftAndRightNode(@Param("leftNodeId") Long leftNodeId , @Param("rightNodeId") Long rightNodeId);
+
+    @Modifying
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId - :width WHERE node.rightNodeId > :nodeId")
+    void UpdateRightAndReduceWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
+
+    @Modifying
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :nodeId")
+    void UpdateLeftAndReduceWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
 }

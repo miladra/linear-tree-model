@@ -1,5 +1,6 @@
 package com.tradeshift.codingchallenge.api;
 
+import com.tradeshift.codingchallenge.entity.TreeNode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -53,13 +55,13 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         HttpEntity<?> request = new HttpEntity<>(headers);
-        ResponseEntity<Object> result = restTemplate.exchange(saveUrl, HttpMethod.GET, request, Object.class);
+        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.GET, request, new ParameterizedTypeReference<List<TreeNode>>(){});
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
                 .isEqualTo(HttpStatus.OK);
 
-        ArrayList<String> resultBody = (ArrayList<String>)result.getBody();
+        List<TreeNode> resultBody = result.getBody();
 
         assertThat(resultBody.size())
                 .as("Check size")
@@ -67,15 +69,15 @@ public class ApiTreeNodeTest {
     }
 
     @Test
-    public void addTreeNode() {
+    public void updateTreeNode() {
 
-        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/add";
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/update";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("afterNode" , 'E');
-        parameters.put("newNode" ,'K');
+        parameters.put("newParentPosition" , 'C');
+        parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
         ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
@@ -90,5 +92,45 @@ public class ApiTreeNodeTest {
         assertThat(resultBody)
                 .as("Check size")
                 .isEqualTo("Node added");
+    }
+
+    @Test
+    public void updateRootTreeNode() {
+
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/update";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("newParentPosition" , 'A');
+        parameters.put("currentNode" ,'E');
+
+        HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
+        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+
+        assertThat(result.getStatusCode())
+                .as("GET API Node")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    public void updateNodeWithChildrenTreeNode() {
+
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/update";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("newParentPosition" , 'C');
+        parameters.put("currentNode" ,'B');
+
+        HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
+        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+
+        assertThat(result.getStatusCode())
+                .as("GET API Node")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+
     }
 }

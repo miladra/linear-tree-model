@@ -1,5 +1,6 @@
 package com.tradeshift.codingchallenge.Service;
 
+import com.tradeshift.codingchallenge.common.exception.BadRequestException;
 import com.tradeshift.codingchallenge.common.exception.NotFoundException;
 import com.tradeshift.codingchallenge.entity.TreeNode;
 import com.tradeshift.codingchallenge.repository.TreeNodeRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -23,46 +25,96 @@ public class TreeNodeServiceImpl implements TreeNodeService {
     protected TreeNodeRepository treeNodeRepository;
 
     @Override
-    public ArrayList<String> findTreeNodeByName(String name) {
-        if(name.isEmpty() || name.equals("")){
+    public List<TreeNode> findTreeNodeByName(String name) {
+        List<TreeNode> treeNodes;
+        try {
 
+            if (name.isEmpty() || name.equals("")) {
+
+            }
+           treeNodes = treeNodeRepository.findTreeNodeByName(name);
+
+            if (treeNodes.isEmpty()) {
+                throw new NotFoundException("No tree Node found with the given name: " + name);
+            }
+
+        }catch (Exception ex){
+            throw  ex;
         }
-        ArrayList<String> treeNodes = treeNodeRepository.findTreeNodeByName(name);
-
-        if (treeNodes.isEmpty()) {
-            NotFoundException structureNotFound = new NotFoundException("No tree Node found with the given id: " + name);
-            throw structureNotFound;
-        }
-
         return treeNodes;
     }
 
+    /**
+     * if new position is between two node all node to its right would have their left and right values increased by two.
+     * if the node is added as child of a node that has no children we need increase left and right values from its left.
+     * @param parameters include newParentPosition and currentNode
+     * @return void
+     */
+
     @Override
     @Transactional()
-    public void add(Map<String, Object> parameters){
+    public void Update(Map<String, Object> parameters){
 
         try
         {
-            String afterNode = (String)parameters.get("afterNode");
-            String newNode   = (String)parameters.get("newNode");
-            //Get previous Node
-            TreeNode afterTreeNode = treeNodeRepository.findByName(afterNode).get(0);
+            String newPosition = (String)parameters.get("newParentPosition");
+            String currentName = (String)parameters.get("currentNode");
+
+            //Get Nodes
+            TreeNode newPositionNode = treeNodeRepository.findByName(newPosition).get(0);
+            TreeNode currentNode     = treeNodeRepository.findByName(currentName).get(0);
+
+            if(newPositionNode.getRootNode().getId() == newPositionNode.getId()){
+                throw new BadRequestException("Update root node is not possible");
+            }
+
+            if(currentNode.getSubNodes() == null || currentNode.getSubNodes().size() == 0) {
+
+                Long width = currentNode.getRightNodeId()-currentNode.getLeftNodeId() + 1;
+                treeNodeRepository.DeleteBetweenLeftAndRightNode(currentNode.getLeftNodeId(),currentNode.getRightNodeId());
+                treeNodeRepository.UpdateRightAndReduceWidth(width , newPositionNode.getRightNodeId());
+                treeNodeRepository.UpdateLeftAndReduceWidth(width ,newPositionNode.getRightNodeId());
+            }
+            else{
+                throw new BadRequestException("Update a node with children is not possible");
+            }
 
 
-            //move all next mode after Node
-            treeNodeRepository.UpdateRightId(afterTreeNode.getRightNodeId());
-            treeNodeRepository.UpdateLeftId(afterTreeNode.getRightNodeId());
+            if(newPositionNode.getSubNodes() != null && newPositionNode.getSubNodes().size() != 0) {
+                //move all next mode after Node
+                treeNodeRepository.UpdateRightId(newPositionNode.getRightNodeId());
+                treeNodeRepository.UpdateLeftId(newPositionNode.getRightNodeId());
+                //Create new node
+                TreeNode treeNode = new TreeNode();
+                treeNode.setName(currentName);
+                treeNode.setParentNode(newPositionNode);
+                treeNode.setRootNode(newPositionNode.getRootNode());
+                treeNode.setLeftNodeId(newPositionNode.getRightNodeId() + 1);
+                treeNode.setRightNodeId(newPositionNode.getRightNodeId() + 2);
+                treeNode.setHeight(newPositionNode.getHeight() + 1);
+                //Save new Node
+                treeNodeRepository.save(treeNode);
+            }
+            else{
 
-            //Create new node
-            TreeNode treeNode = new TreeNode();
-            treeNode.setName(newNode);
-            treeNode.setIsRoot(false);
-            treeNode.setLeftNodeId(afterTreeNode.getRightNodeId() + 1);
-            treeNode.setRightNodeId(afterTreeNode.getRightNodeId() + 2);
-            treeNode.setParentId(afterTreeNode.getId());
+                //move all next mode after Node
+                treeNodeRepository.UpdateRightId(newPositionNode.getLeftNodeId());
+                treeNodeRepository.UpdateLeftId(newPositionNode.getLeftNodeId());
+                //Create new node
+                TreeNode treeNode = new TreeNode();
+                treeNode.setName(currentName);
+                treeNode.setParentNode(newPositionNode);
+                treeNode.setRootNode(newPositionNode.getRootNode());
+                treeNode.setLeftNodeId(newPositionNode.getLeftNodeId() + 1);
+                treeNode.setRightNodeId(newPositionNode.getLeftNodeId() + 2);
+                treeNode.setHeight(newPositionNode.getHeight() + 1);
+                //Save new Node
+                treeNodeRepository.save(treeNode);
 
-            //Save new Node
-            treeNodeRepository.saveAndFlush(treeNode);
+            }
+
+
+            treeNodeRepository.flush();
 
         } catch (Exception ex){
 

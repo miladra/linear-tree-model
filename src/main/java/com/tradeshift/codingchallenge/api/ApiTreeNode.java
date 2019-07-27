@@ -54,7 +54,7 @@ public class ApiTreeNode {
     @RequestMapping(value = "/treeNode/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
     public String updateTreeNode(@RequestBody Map<String, Object> parameters) {
         try{
-             treeNodeService.Update(parameters);
+             treeNodeService.UpdateWithSubTree(parameters);
              return "Node added";
          }catch (Exception ex){
              throw new BadRequestException("Node cannot be updated");

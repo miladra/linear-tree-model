@@ -42,4 +42,10 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :nodeId")
     void UpdateLeftAndReduceWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
+
+    @Modifying
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :parentRightNodeId AND node.leftNodeId < :newPositionRightId")
+    void UpdateLeftBetweenCurentAndNewPosition(@Param("width") Long width , @Param("parentRightNodeId") Long parentRightNodeId , @Param("newPositionRightId") Long newPositionRightId);
+
+
 }

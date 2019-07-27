@@ -9,4 +9,5 @@ import java.util.Map;
 public interface TreeNodeService {
     List<TreeNode> findTreeNodeByName(String name);
     void Update(Map<String, Object> parameters);
+    void UpdateWithSubTree(Map<String, Object> parameters);
 }

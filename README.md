@@ -35,6 +35,8 @@ mvn test
 ```
 docker-compose up
 ```
+### Used Algorithm
+The algorithm used for save tree is The Nested Set. I used it to beter performance in read tree, in this approach dont need recursive loop to fetch data, which it has heavy workload on database engine 
 
 _____
 

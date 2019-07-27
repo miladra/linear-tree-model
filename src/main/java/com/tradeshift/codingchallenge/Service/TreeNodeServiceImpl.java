@@ -122,4 +122,81 @@ public class TreeNodeServiceImpl implements TreeNodeService {
 
         }
     }
+
+    /**
+     * parameters included three values
+     * newParentPosition is new parent position
+     * childOfNewParent is child of new parent which old node (or tree) should move next of it. the problem here is if parent has children we have to determin new node should add after which one.
+     * @param parameters include newParentPosition, childOfNewParent, currentNode
+     * @return void
+     */
+    @Override
+    @Transactional()
+    public void UpdateWithSubTree(Map<String, Object> parameters){
+
+        try
+        {
+            String newPosition      = (String)parameters.get("newParentPosition");
+            String childOfNewParent = (String)parameters.get("childOfNewParent");
+            String currentName      = (String)parameters.get("currentNode");
+
+            //Get Nodes
+            TreeNode newPositionNode    = treeNodeRepository.findByName(newPosition).get(0);
+            TreeNode currentNode        = treeNodeRepository.findByName(currentName).get(0);
+            TreeNode currentNodeParrent = currentNode.getParentNode();
+            TreeNode childOfNewParentNode = null;
+
+            Long width = currentNodeParrent.getRightNodeId()- currentNodeParrent.getLeftNodeId() + 1;
+
+
+
+            Long rightOfNewPosition;
+            Long distance;
+            if(newPositionNode.getSubNodes() != null && newPositionNode.getSubNodes().size() != 0) {
+                distance = newPositionNode.getRightNodeId() - currentNodeParrent.getRightNodeId();
+
+                for (TreeNode c : newPositionNode.getSubNodes()) {
+                    if (c.getName().equals(childOfNewParent)) {
+                        childOfNewParentNode = c;
+                    }
+                }
+
+                if (childOfNewParentNode == null) {
+                    throw new BadRequestException("The " + childOfNewParent + "is not child of " + newPosition);
+                }
+                rightOfNewPosition = childOfNewParentNode.getRightNodeId();
+            }
+            else{
+                distance = newPositionNode.getRightNodeId() - currentNodeParrent.getRightNodeId() -1;
+                rightOfNewPosition = newPositionNode.getRightNodeId();
+            }
+
+            if (distance < 0) {
+                distance = Math.abs(distance);
+            }
+
+             List<TreeNode> moveTree = treeNodeRepository.findTreeNodeByName(currentNodeParrent.getName());
+             treeNodeRepository.UpdateLeftBetweenCurentAndNewPosition(width , currentNodeParrent.getRightNodeId() , rightOfNewPosition);
+              for (TreeNode r : moveTree) {
+
+                 if(r.getRootNode() == null)
+                     throw new BadRequestException("move root is not possible");
+
+                 r.setLeftNodeId(r.getLeftNodeId() + distance);
+                 r.setRightNodeId(r.getRightNodeId() + distance);
+                 r.setHeight(r.getHeight() + newPositionNode.getHeight());
+                 currentNodeParrent.setParentNode(newPositionNode);
+
+             }
+
+            treeNodeRepository.flush();
+
+        } catch (Exception ex){
+
+            throw ex;
+
+        }
+    }
+
+
 }

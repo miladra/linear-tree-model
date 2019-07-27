@@ -17,7 +17,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.h2.console.enabled=true")
 @AutoConfigureWebClient(registerRestTemplate = true)
 public class ApiTreeNodeTest {
 
@@ -68,8 +68,36 @@ public class ApiTreeNodeTest {
                 .isEqualTo(10);
     }
 
+
     @Test
-    public void updateTreeNode() {
+    public void updateTreeNodeMoveToParentWithChildren() {
+
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/update";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("newParentPosition" , 'B');
+        parameters.put("childOfNewParent" , 'D');
+        parameters.put("currentNode" ,'C');
+
+        HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
+        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+
+        assertThat(result.getStatusCode())
+                .as("GET API Node")
+                .isEqualTo(HttpStatus.OK);
+
+        String resultBody = result.getBody();
+
+
+        assertThat(resultBody)
+                .as("Check size")
+                .isEqualTo("Node added");
+    }
+
+    @Test
+    public void updateTreeNodeMoveToParentWithoutChildren() {
 
         String saveUrl = "http://localhost:" + serverPort + "/rest/v1/treeNode/update";
         HttpHeaders headers = new HttpHeaders();

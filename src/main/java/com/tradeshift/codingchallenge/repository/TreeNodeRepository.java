@@ -24,28 +24,19 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
     List<TreeNode> findTreeNodeByName(@Param("nodeName") String nodeName);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + 2 WHERE node.rightNodeId > :nodeId")
-    void UpdateRightId(@Param("nodeId") Long nodeId);
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId = (node.leftNodeId - :width) WHERE node.leftNodeId > :nodeId")
+    void UpdateLeftAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId + 2 WHERE node.leftNodeId > :nodeId")
-    void UpdateLeftId(@Param("nodeId") Long nodeId);
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = (node.rightNodeId - :width) WHERE node.rightNodeId > :nodeId")
+    void UpdateRightAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
 
     @Modifying
-    @Query("DELETE FROM TreeNode AS node WHERE node.leftNodeId BETWEEN :leftNodeId AND :rightNodeId")
-    void DeleteBetweenLeftAndRightNode(@Param("leftNodeId") Long leftNodeId , @Param("rightNodeId") Long rightNodeId);
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId = (node.leftNodeId + :width) WHERE node.leftNodeId >= :nodeId")
+    void UpdateEqualLeftAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId - :width WHERE node.rightNodeId > :nodeId")
-    void UpdateRightAndReduceWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
-
-    @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :nodeId")
-    void UpdateLeftAndReduceWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
-
-    @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :parentRightNodeId AND node.leftNodeId < :newPositionRightId")
-    void UpdateLeftBetweenCurentAndNewPosition(@Param("width") Long width , @Param("parentRightNodeId") Long parentRightNodeId , @Param("newPositionRightId") Long newPositionRightId);
-
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = (node.rightNodeId + :width) WHERE node.rightNodeId >= :nodeId")
+    void UpdateEqualRightAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
 
 }

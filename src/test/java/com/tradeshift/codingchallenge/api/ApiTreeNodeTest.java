@@ -65,7 +65,7 @@ public class ApiTreeNodeTest {
 
         assertThat(resultBody.size())
                 .as("Check size")
-                .isEqualTo(10);
+                .isEqualTo(5);
     }
 
 
@@ -77,8 +77,7 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newParentPosition" , 'B');
-        parameters.put("childOfNewParent" , 'D');
+        parameters.put("newPosition" , 'B');
         parameters.put("currentNode" ,'C');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
@@ -86,14 +85,8 @@ public class ApiTreeNodeTest {
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
-                .isEqualTo(HttpStatus.OK);
+                .isEqualTo(HttpStatus.BAD_REQUEST);
 
-        String resultBody = result.getBody();
-
-
-        assertThat(resultBody)
-                .as("Check size")
-                .isEqualTo("Node added");
     }
 
     @Test
@@ -104,7 +97,7 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newParentPosition" , 'C');
+        parameters.put("newPosition" , 'C');
         parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
@@ -130,7 +123,7 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newParentPosition" , 'A');
+        parameters.put("newPosition" , 'A');
         parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
@@ -138,7 +131,7 @@ public class ApiTreeNodeTest {
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
-                .isEqualTo(HttpStatus.BAD_REQUEST);
+                .isEqualTo(HttpStatus.OK);
 
     }
 
@@ -150,7 +143,7 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newParentPosition" , 'C');
+        parameters.put("newPosition" , 'C');
         parameters.put("currentNode" ,'B');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
@@ -158,7 +151,7 @@ public class ApiTreeNodeTest {
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
-                .isEqualTo(HttpStatus.BAD_REQUEST);
+                .isEqualTo(HttpStatus.OK);
 
     }
 }

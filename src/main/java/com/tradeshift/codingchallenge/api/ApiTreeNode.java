@@ -8,6 +8,8 @@ import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,15 +36,16 @@ public class ApiTreeNode {
     })
     @ApiParam(name = "treeNodeName", value = "node name", required = true)
     @RequestMapping(value = "/treeNode/{treeNodeName}", method = RequestMethod.GET, produces = "application/json")
-    public List<TreeNode> getTreeNode(@PathVariable String treeNodeName) {
+    public ResponseEntity<List<TreeNode>> getTreeNode(@PathVariable String treeNodeName) {
         try{
-            return treeNodeService.findTreeNodeByName(treeNodeName);
+            List<TreeNode> result = treeNodeService.findTreeNodeByName(treeNodeName);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("Resource not found: " + treeNodeName);
         }
     }
 
-    @ApiOperation(value = "Update node after a specific node", response = List.class, tags = "addNode")
+    @ApiOperation(value = "Move parent of current node to new position", tags = "updateTreeNode")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
@@ -50,7 +53,7 @@ public class ApiTreeNode {
             @ApiResponse(code = 404, message = "not found!!!"),
             @ApiResponse(code = 500, message = "Resource not found")
     })
-    @ApiParam(name = "parameters", value = "it should had two item first is afterNode and second is new node", required = true)
+    @ApiParam(name = "parameters", value = "it should had two item first is new position and second is current node", required = true)
     @RequestMapping(value = "/treeNode/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
     public String updateTreeNode(@RequestBody Map<String, Object> parameters) {
         try{

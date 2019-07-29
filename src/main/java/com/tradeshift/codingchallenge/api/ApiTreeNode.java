@@ -45,7 +45,7 @@ public class ApiTreeNode {
         }
     }
 
-    @ApiOperation(value = "Move parent of current node to new position", tags = "updateTreeNode")
+    @ApiOperation(value = "Move a node to any position in the tree", tags = "updateTreeNode")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 401, message = "not authorized!"),
@@ -53,7 +53,7 @@ public class ApiTreeNode {
             @ApiResponse(code = 404, message = "not found!!!"),
             @ApiResponse(code = 500, message = "Resource not found")
     })
-    @ApiParam(name = "parameters", value = "it should had two item first is new position and second is current node", required = true)
+    @ApiParam(name = "parameters", value = "It should had two item first is leftPositionOfTargeted it is the left position where the subtree is targeted, and second is current node which its parent will be moved", required = true)
     @RequestMapping(value = "/treeNode/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
     public ResponseEntity<List<TreeNode>> updateTreeNode(@RequestBody Map<String, Object> parameters) {
         try{

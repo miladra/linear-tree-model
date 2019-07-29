@@ -7,8 +7,10 @@ alter table tree_node add constraint FKowh55v6loq8va4if2inpqmuy5 foreign key (ro
 
 --changeset milad:2
 INSERT INTO tree_node VALUES
-(1,0,1,'A',10,NULL,1),
+(1,0,1,'A',14,NULL,1),
 (2,1,2,'B',7,1,1),
-(3,1,8,'C',9,1,1),
+(3,1,8,'C',13,1,1),
 (4,2,3,'D',4,2,1),
-(5,2,5,'E',6,2,1)
+(5,2,5,'E',6,2,1),
+(6,2,9,'F',10,2,1),
+(7,2,11,'G',12,2,1)

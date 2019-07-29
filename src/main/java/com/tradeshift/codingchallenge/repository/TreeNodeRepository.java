@@ -24,19 +24,18 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
     List<TreeNode> findTreeNodeByName(@Param("nodeName") String nodeName);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = (node.leftNodeId - :width) WHERE node.leftNodeId > :nodeId")
-    void UpdateLeftAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId  = node.leftNodeId  + :width WHERE node.leftNodeId  >= :newLeftPos ")
+    void CreateLeftNewSpaceForSubtree(@Param("width") Long width , @Param("newLeftPos") Long newLeftPos);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.rightNodeId = (node.rightNodeId - :width) WHERE node.rightNodeId > :nodeId")
-    void UpdateRightAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + :width WHERE node.rightNodeId >= :newLeftPos")
+    void CreateRightNewSpaceForSubtree(@Param("width") Long width , @Param("newLeftPos") Long newLeftPos);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.leftNodeId = (node.leftNodeId + :width) WHERE node.leftNodeId >= :nodeId")
-    void UpdateEqualLeftAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
+    @Query("UPDATE TreeNode AS node SET node.leftNodeId  = node.leftNodeId  - :width WHERE node.leftNodeId  > :oldRightPos ")
+    void RemoveLeftOldSubtreeSpace(@Param("width") Long width , @Param("oldRightPos") Long oldRightPos);
 
     @Modifying
-    @Query("UPDATE TreeNode AS node SET node.rightNodeId = (node.rightNodeId + :width) WHERE node.rightNodeId >= :nodeId")
-    void UpdateEqualRightAndIncreaseWidth(@Param("width") Long width , @Param("nodeId") Long nodeId);
-
+    @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId - :width WHERE node.rightNodeId > :oldRightPos")
+    void RemoveRightOldSubtreeSpace(@Param("width") Long width , @Param("oldRightPos") Long oldRightPos);
 }

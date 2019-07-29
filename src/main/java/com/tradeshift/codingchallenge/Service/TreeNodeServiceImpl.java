@@ -44,75 +44,65 @@ public class TreeNodeServiceImpl implements TreeNodeService {
         return treeNodes;
     }
 
-
     /**
-     * This method move parent of current node to new position
-     * @param parameters include newPosition, currentNode
+     * This method move a node to any position in the tree
+     * @param parameters include leftPositionOfTargeted(is the left position where the subtree is targeted), currentNode
      * @return void
      */
     @Override
     @Transactional()
     public List<TreeNode> UpdateWithSubTree(Map<String, Object> parameters){
-
         try
         {
-
-            String newPosition    = (String)parameters.get("newPosition");
+            String leftPositionOfTargeted  = (String)parameters.get("newPosition");
             String currentName      = (String)parameters.get("currentNode");
 
             //Get Nodes
             TreeNode currentNode        = treeNodeRepository.findByName(currentName).get(0);
-            TreeNode newParentPosition   = treeNodeRepository.findByName(newPosition).get(0);
+            TreeNode leftPositionOfTargetedNode   = treeNodeRepository.findByName(leftPositionOfTargeted).get(0);
             TreeNode currentNodeParrent = currentNode.getParentNode();
+            Long oldRightPos = currentNodeParrent.getRightNodeId();
 
             if(currentNodeParrent.getParentNode() == null)
                 throw new BadRequestException("move root is not possible");
 
 
             Long width = currentNodeParrent.getRightNodeId()- currentNodeParrent.getLeftNodeId() + 1;
+            Long distance = leftPositionOfTargetedNode.getLeftNodeId() - currentNodeParrent.getRightNodeId() -1;
+            Long tmppos = currentNodeParrent.getLeftNodeId();
 
+            //for backwards movement
+            if (distance < 0) {
+                distance -= width;
+                tmppos += width;
+            }
 
             List<TreeNode> moveTree = treeNodeRepository.findTreeNodeByName(currentNodeParrent.getName());
-            treeNodeRepository.UpdateLeftAndIncreaseWidth(width , currentNodeParrent.getRightNodeId());
-            treeNodeRepository.UpdateRightAndIncreaseWidth(width , currentNodeParrent.getRightNodeId());
+            treeNodeRepository.CreateLeftNewSpaceForSubtree(width , leftPositionOfTargetedNode.getLeftNodeId());
+            treeNodeRepository.CreateRightNewSpaceForSubtree(width , leftPositionOfTargetedNode.getLeftNodeId());
 
-            Long pos;
-            if(newParentPosition.getRightNodeId()>currentNode.getRightNodeId()){
-                pos = newParentPosition.getRightNodeId() - width;
-            } else {
-                pos = newParentPosition.getRightNodeId();
-            }
-            treeNodeRepository.UpdateEqualLeftAndIncreaseWidth(width , pos);
-            treeNodeRepository.UpdateEqualRightAndIncreaseWidth(width ,pos);
-
-            Long dis;
-            if(newParentPosition.getRightNodeId()>currentNode.getRightNodeId()){
-                dis = newParentPosition.getRightNodeId() - currentNode.getRightNodeId() - 2;
-            } else {
-                dis = newParentPosition.getRightNodeId() - currentNode.getRightNodeId() - 2 + width;
-            }
 
             for (TreeNode r : moveTree) {
-                r.setLeftNodeId(r.getLeftNodeId() + dis);
-                r.setRightNodeId(r.getRightNodeId() + dis);
-                r.setHeight(r.getHeight() + newParentPosition.getHeight());
+                r.setLeftNodeId(r.getLeftNodeId() + distance);
+                r.setRightNodeId(r.getRightNodeId() + distance);
+                r.setHeight(r.getHeight() + leftPositionOfTargetedNode.getHeight());
 
             }
 
-            currentNodeParrent.setParentNode(newParentPosition);
+            currentNodeParrent.setParentNode(leftPositionOfTargetedNode.getParentNode());
 
+
+            treeNodeRepository.RemoveLeftOldSubtreeSpace(width  , oldRightPos);
+            treeNodeRepository.RemoveRightOldSubtreeSpace(width , oldRightPos);
 
             treeNodeRepository.flush();
 
-            List<TreeNode> resultSubTree = treeNodeRepository.findTreeNodeByName(newPosition);
+            List<TreeNode> resultSubTree = treeNodeRepository.findTreeNodeByName(leftPositionOfTargeted);
             return resultSubTree;
-
-
 
         } catch (Exception ex){
             throw ex;
         }
     }
-
 
 }

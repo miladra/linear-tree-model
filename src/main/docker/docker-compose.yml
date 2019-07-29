@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   tradeshift:
-    build: .
+    build: ../../..
     container_name: "tradeshift"
     image: debian/latest
     ports:

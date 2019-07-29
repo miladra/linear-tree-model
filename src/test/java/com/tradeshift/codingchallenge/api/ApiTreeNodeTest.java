@@ -81,7 +81,7 @@ public class ApiTreeNodeTest {
         parameters.put("currentNode" ,'C');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+        ResponseEntity<Object> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, Object.class);
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
@@ -101,18 +101,18 @@ public class ApiTreeNodeTest {
         parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request,  new ParameterizedTypeReference<List<TreeNode>>(){});
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
                 .isEqualTo(HttpStatus.OK);
 
-        String resultBody = result.getBody();
+        List<TreeNode> resultBody = result.getBody();
 
 
-        assertThat(resultBody)
+        assertThat(resultBody.size())
                 .as("Check size")
-                .isEqualTo("Node added");
+                .isEqualTo(4);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ApiTreeNodeTest {
         parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request,  new ParameterizedTypeReference<List<TreeNode>>(){});
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
@@ -147,7 +147,7 @@ public class ApiTreeNodeTest {
         parameters.put("currentNode" ,'B');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, String.class);
+        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.POST, request, new ParameterizedTypeReference<List<TreeNode>>(){});
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")

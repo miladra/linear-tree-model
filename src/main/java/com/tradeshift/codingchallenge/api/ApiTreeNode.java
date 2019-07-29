@@ -55,10 +55,10 @@ public class ApiTreeNode {
     })
     @ApiParam(name = "parameters", value = "it should had two item first is new position and second is current node", required = true)
     @RequestMapping(value = "/treeNode/update", method = RequestMethod.POST, produces = "application/json",consumes = "application/json")
-    public String updateTreeNode(@RequestBody Map<String, Object> parameters) {
+    public ResponseEntity<List<TreeNode>> updateTreeNode(@RequestBody Map<String, Object> parameters) {
         try{
-             treeNodeService.UpdateWithSubTree(parameters);
-             return "Node added";
+            List<TreeNode> result =treeNodeService.UpdateWithSubTree(parameters);
+            return new ResponseEntity<>(result, HttpStatus.OK);
          }catch (Exception ex){
              throw new BadRequestException("Node cannot be updated");
          }

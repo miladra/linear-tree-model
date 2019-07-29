@@ -10,5 +10,5 @@ public interface TreeNodeService {
 
     List<TreeNode> findTreeNodeByName(String name);
 
-    void UpdateWithSubTree(Map<String, Object> parameters);
+    List<TreeNode> UpdateWithSubTree(Map<String, Object> parameters);
 }

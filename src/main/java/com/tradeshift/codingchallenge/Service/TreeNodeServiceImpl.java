@@ -52,7 +52,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
      */
     @Override
     @Transactional()
-    public void UpdateWithSubTree(Map<String, Object> parameters){
+    public List<TreeNode> UpdateWithSubTree(Map<String, Object> parameters){
 
         try
         {
@@ -104,10 +104,13 @@ public class TreeNodeServiceImpl implements TreeNodeService {
 
             treeNodeRepository.flush();
 
+            List<TreeNode> resultSubTree = treeNodeRepository.findTreeNodeByName(newPosition);
+            return resultSubTree;
+
+
+
         } catch (Exception ex){
-
             throw ex;
-
         }
     }
 

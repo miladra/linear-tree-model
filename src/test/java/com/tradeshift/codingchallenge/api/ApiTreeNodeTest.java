@@ -96,7 +96,7 @@ public class ApiTreeNodeTest {
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newPosition" , 'F');
+        parameters.put("newPosition" , 'G');
         parameters.put("currentNode" ,'E');
 
         HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
@@ -108,12 +108,10 @@ public class ApiTreeNodeTest {
 
         List<TreeNode> resultBody = result.getBody();
 
-/*
         assertThat(resultBody.size())
                 .as("Check size")
-                .isEqualTo(4);
+                .isEqualTo(6);
 
- */
     }
 
     @Test

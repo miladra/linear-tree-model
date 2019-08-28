@@ -17,9 +17,8 @@ import java.util.Map;
 
 @Service
 public class TreeNodeServiceImpl implements TreeNodeService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TreeNodeServiceImpl.class);
 
-    protected static final String STRUCTURE_NOT_FOUND_MESSAGE_KEY = "PROCESS.ERROR.NOT-FOUND";
+    private static final Logger LOGGER = LoggerFactory.getLogger(TreeNodeServiceImpl.class);
 
     @Autowired
     protected TreeNodeRepository treeNodeRepository;
@@ -32,7 +31,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
             if (name.isEmpty() || name.equals("")) {
 
             }
-           treeNodes = treeNodeRepository.findTreeNodeByName(name);
+            treeNodes = treeNodeRepository.findTreeNodeByName(name);
 
             if (treeNodes.isEmpty()) {
                 throw new NotFoundException("No tree Node found with the given name: " + name);
@@ -44,6 +43,46 @@ public class TreeNodeServiceImpl implements TreeNodeService {
         return treeNodes;
     }
 
+    @Override
+    public List<TreeNode> findAllTreeNode() {
+        List<TreeNode> treeNodes;
+        try {
+
+            treeNodes = treeNodeRepository.findAllTreeNode();
+
+            if (treeNodes.isEmpty()) {
+                throw new NotFoundException("Exception accrued");
+            }
+
+        }catch (Exception ex){
+            throw  ex;
+        }
+        return treeNodes;
+    }
+
+    @Override
+    public TreeNode add(TreeNode node) {
+        TreeNode treeNodes;
+        try {
+
+            treeNodes = treeNodeRepository.saveAndFlush(node);
+
+        }catch (Exception ex){
+            throw  ex;
+        }
+        return treeNodes;
+    }
+
+    @Override
+    public void delete(long id) {
+        TreeNode treeNodes;
+        try {
+            treeNodeRepository.delete(id);
+        }catch (Exception ex){
+            throw  ex;
+        }
+    }
+
     /**
      * This method move a node to any position in the tree
      * @param parameters include leftPositionOfTargeted(is the left position where the subtree is targeted), currentNode
@@ -51,7 +90,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
      */
     @Override
     @Transactional()
-    public List<TreeNode> UpdateWithSubTree(Map<String, Object> parameters){
+    public List<TreeNode> moveSubTree(Map<String, Object> parameters){
         try
         {
             String leftPositionOfTargeted  = (String)parameters.get("newPosition");
@@ -70,7 +109,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
             Long width = currentNodeParent.getRightNodeId()- currentNodeParent.getLeftNodeId() + 1;
             Long distance;
             if(leftPositionOfTargetedNode.getLeftNodeId() >  currentNodeParent.getRightNodeId()) {
-                 distance = leftPositionOfTargetedNode.getLeftNodeId() - currentNodeParent.getRightNodeId() - 1;
+                distance = leftPositionOfTargetedNode.getLeftNodeId() - currentNodeParent.getRightNodeId() - 1;
             }else {
                 distance = leftPositionOfTargetedNode.getLeftNodeId()  - currentNodeParent.getLeftNodeId();
             }

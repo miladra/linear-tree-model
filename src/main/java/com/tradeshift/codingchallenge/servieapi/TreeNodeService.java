@@ -10,5 +10,11 @@ public interface TreeNodeService {
 
     List<TreeNode> findTreeNodeByName(String name);
 
-    List<TreeNode> UpdateWithSubTree(Map<String, Object> parameters);
+    List<TreeNode> findAllTreeNode();
+
+    TreeNode add(TreeNode node);
+
+    void delete(long id);
+
+    List<TreeNode> moveSubTree(Map<String, Object> parameters);
 }

@@ -16,12 +16,23 @@ import java.util.List;
 public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     List<TreeNode> findByName(String name);
+    TreeNode saveAndFlush(TreeNode node);
+
+    @Query("Delete from TreeNode")
+    void delete(long id);
 
     @Query("SELECT node " +
-           "FROM TreeNode as node , TreeNode as parent " +
-           "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId AND parent.name = :nodeName  " +
-           "ORDER BY node.leftNodeId")
+            "FROM TreeNode as node , TreeNode as parent " +
+            "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId  " +
+            "ORDER BY node.leftNodeId")
+    List<TreeNode> findAllTreeNode();
+
+    @Query("SELECT node " +
+            "FROM TreeNode as node , TreeNode as parent " +
+            "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId AND parent.name = :nodeName  " +
+            "ORDER BY node.leftNodeId")
     List<TreeNode> findTreeNodeByName(@Param("nodeName") String nodeName);
+
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.leftNodeId  = node.leftNodeId  + :width WHERE node.leftNodeId  >= :newLeftPos ")

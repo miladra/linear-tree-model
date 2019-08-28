@@ -65,6 +65,11 @@ public class TreeNodeServiceImpl implements TreeNodeService {
         TreeNode treeNodes;
         try {
 
+            TreeNode currentNode = treeNodeRepository.findByName("A").get(0);
+
+            treeNodeRepository.MoveRightSpace(Long.valueOf(2) , currentNode.getRightNodeId());
+            treeNodeRepository.MoveLeftSpace(Long.valueOf(2)  , currentNode.getRightNodeId());
+
             treeNodes = treeNodeRepository.saveAndFlush(node);
 
         }catch (Exception ex){

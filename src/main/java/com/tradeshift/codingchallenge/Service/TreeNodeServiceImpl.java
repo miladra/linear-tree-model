@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TreeNodeServiceImpl implements TreeNodeService {
@@ -61,31 +62,70 @@ public class TreeNodeServiceImpl implements TreeNodeService {
     }
 
     @Override
-    public TreeNode add(TreeNode node) {
+    public TreeNode add(TreeNode node , String newPosition ,Boolean addAsChild) throws Exception {
         TreeNode treeNodes;
         try {
 
-            TreeNode currentNode = treeNodeRepository.findByName("A").get(0);
+            TreeNode currentNode = treeNodeRepository.findByName(newPosition).get(0);
 
-            treeNodeRepository.MoveRightSpace(Long.valueOf(2) , currentNode.getRightNodeId());
-            treeNodeRepository.MoveLeftSpace(Long.valueOf(2)  , currentNode.getRightNodeId());
+            Long position = currentNode.getRightNodeId();
 
+            if(addAsChild){
+                if(currentNode.getSubNodes() != null && currentNode.getSubNodes().size() != 0){
+                    throw new Exception("Operation Error");
+                }
+                position = currentNode.getLeftNodeId();
+            }
+
+            treeNodeRepository.MoveRightSpace(Long.valueOf(2) , position);
+            treeNodeRepository.MoveLeftSpace(Long.valueOf(2)  , position);
+
+
+            node.setLeftNodeId(position + 1);
+            node.setRightNodeId(position + 2);
+            node.setHeight(currentNode.getHeight());
+            node.setParentNode(currentNode.getParentNode());
+            node.setRootNode(currentNode.getRootNode());
             treeNodes = treeNodeRepository.saveAndFlush(node);
 
         }catch (Exception ex){
-            throw  ex;
+            throw ex;
         }
         return treeNodes;
     }
 
+
     @Override
-    public void delete(long id) {
-        TreeNode treeNodes;
+    public TreeNode update(TreeNode node){
+        TreeNode treeNode;
         try {
-            treeNodeRepository.delete(id);
+            treeNode = treeNodeRepository.saveAndFlush(node);
         }catch (Exception ex){
             throw  ex;
         }
+        return treeNode;
+    }
+    @Override
+    public void delete(long id) throws Exception {
+
+            try {
+
+                Optional<TreeNode> currentNode = treeNodeRepository.findById(id);
+
+                if(!currentNode.isPresent()){
+                    throw new Exception("node not found");
+                }
+
+                treeNodeRepository.DeleteNodes(currentNode.get().getLeftNodeId() , currentNode.get().getRightNodeId());
+
+                long width = currentNode.get().getRightNodeId() - currentNode.get().getLeftNodeId() + 1;
+                treeNodeRepository.RemoveRightSpace(width , currentNode.get().getRightNodeId());
+                treeNodeRepository.RemoveLeftSpace(width, currentNode.get().getRightNodeId());
+
+
+            }catch (Exception ex){
+                throw ex;
+            }
     }
 
     /**

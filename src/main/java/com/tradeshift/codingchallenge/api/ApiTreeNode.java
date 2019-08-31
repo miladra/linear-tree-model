@@ -53,11 +53,15 @@ public class ApiTreeNode {
     }
 
     @ApiOperation(value = "Add new node in tree", response = List.class, tags = "add")
-    @ApiParam(name = "node", value = "a object of TreeNode type", required = true)
-    @RequestMapping(value = "/nodes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<TreeNode> addNode(@RequestBody TreeNode node) {
+    @ApiParam(name = "params",  value = "params should have three item first is nodeName which is name of new object of TreeNode " +
+                                        " second is newposition which the node will be add in right side of it" +
+                                        " if you want add new node as children of node which does not have children addAsChild should be true", required = true)
+
+
+    @RequestMapping(value = "/nodes/{newPosition}/{addAsChild}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public ResponseEntity<TreeNode> addNode(@RequestBody TreeNode node , @PathVariable("newPosition") String newPosition , @PathVariable("addAsChild") Boolean addAsChild) {
         try{
-            TreeNode result = treeNodeService.add(node);
+            TreeNode result = treeNodeService.add(node , newPosition , addAsChild);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("add new node is not possible");
@@ -67,9 +71,9 @@ public class ApiTreeNode {
     @ApiOperation(value = "Update a node", response = List.class, tags = "add")
     @ApiParam(name = "node", value = "a object of TreeNode type", required = true)
     @RequestMapping(value = "/nodes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-    public ResponseEntity<TreeNode> updateService(@RequestBody TreeNode node) {
+    public ResponseEntity<TreeNode> updateNode(@RequestBody TreeNode node) {
         try{
-            TreeNode result = treeNodeService.add(node);
+            TreeNode result = treeNodeService.update(node);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("add new node is not possible");
@@ -79,7 +83,7 @@ public class ApiTreeNode {
     @ApiOperation(value = "Delete a node", response = List.class, tags = "delete")
     @ApiParam(name = "id", value = "id of TreeNode which you would delete", required = true)
     @RequestMapping(value = "/nodes/{id}" , method = RequestMethod.DELETE)
-    public void deleteNodes(@PathVariable("id") Long id) {
+    public void deleteNode(@PathVariable("id") Long id) {
         try{
             treeNodeService.delete(id);
         }catch (Exception ex){

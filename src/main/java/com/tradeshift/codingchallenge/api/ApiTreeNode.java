@@ -1,5 +1,6 @@
 package com.tradeshift.codingchallenge.api;
 
+import com.tradeshift.codingchallenge.Service.TreeNodeServiceImpl;
 import com.tradeshift.codingchallenge.common.exception.BadRequestException;
 import com.tradeshift.codingchallenge.common.exception.NotFoundException;
 import com.tradeshift.codingchallenge.entity.TreeNode;
@@ -23,7 +24,8 @@ import java.util.Map;
 @ApiResponses(value = {@ApiResponse(code = 200, message = "Success|OK"), @ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"), @ApiResponse(code = 404, message = "not found!!!"), @ApiResponse(code = 500, message = "Resource not found")})
 public class ApiTreeNode {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiTreeNode.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiTreeNode.class);
+
 
     @Autowired
     protected TreeNodeService treeNodeService;
@@ -59,8 +61,9 @@ public class ApiTreeNode {
 
 
     @RequestMapping(value = "/nodes/{newPosition}/{addAsChild}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<TreeNode> addNode(@RequestBody TreeNode node , @PathVariable("newPosition") String newPosition , @PathVariable("addAsChild") Boolean addAsChild) {
+    public ResponseEntity<TreeNode> addNode(@PathVariable("newPosition") String newPosition , @PathVariable("addAsChild") String addAsChild, @RequestBody TreeNode node) {
         try{
+            logger.info("Request add :" + node.getName() + " in position :" + newPosition + " as child :" +addAsChild);
             TreeNode result = treeNodeService.add(node , newPosition , addAsChild);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
@@ -93,10 +96,10 @@ public class ApiTreeNode {
 
     @ApiOperation(value = "Move a sub tree to any position in the tree", tags = "moveSubTree")
     @ApiParam(name = "parameters", value = "It should had two item first is leftPositionOfTargeted it is the left position where the subtree is targeted, and second is current node which its parent will be moved", required = true)
-    @RequestMapping(value = "/nodes", produces = "application/json",consumes = "application/json" , method = RequestMethod.PATCH)
-    public ResponseEntity<List<TreeNode>> moveSubTree(@RequestBody Map<String, Object> parameters) {
+    @RequestMapping(value = "/nodes/{newPosition}/{currentNode}", produces = "application/json", method = RequestMethod.PATCH)
+    public ResponseEntity<List<TreeNode>> moveSubTree(@PathVariable("newPosition") String newPosition , @PathVariable("currentNode") String currentNode) {
         try{
-            List<TreeNode> result =treeNodeService.moveSubTree(parameters);
+            List<TreeNode> result =treeNodeService.moveSubTree(newPosition , currentNode);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
             throw new BadRequestException("Node cannot be updated");

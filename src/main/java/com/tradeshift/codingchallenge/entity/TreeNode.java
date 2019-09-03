@@ -15,14 +15,6 @@ import java.util.Set;
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class TreeNode extends BaseEntity{
 
-    public TreeNode() {}
-
-    public TreeNode(String name, Long leftNodeId , Long rightNodeId) {
-        this.leftNodeId = leftNodeId;
-        this.rightNodeId = rightNodeId;
-        this.name = name;
-    }
-
     @Column(name="Name")
     private String name;
 

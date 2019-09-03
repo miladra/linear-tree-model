@@ -15,7 +15,8 @@ import java.util.List;
 @Transactional
 public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
-    List<TreeNode> findByName(String name);
+    TreeNode findByName(String name);
+
     TreeNode saveAndFlush(TreeNode node);
 
     @Query("Delete from TreeNode")
@@ -23,7 +24,7 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     @Query("SELECT node " +
             "FROM TreeNode as node , TreeNode as parent " +
-            "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId  " +
+            "WHERE node.leftNodeId BETWEEN parent.leftNodeId AND parent.rightNodeId  AND parent.leftNodeId = 1 " +
             "ORDER BY node.leftNodeId")
     List<TreeNode> findAllTreeNode();
 
@@ -52,11 +53,11 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId + :width WHERE node.rightNodeId > :right")
-    void MoveRightSpace(@Param("width") Long width , @Param("newLeftPos") Long right);
+    void MoveRightSpace(@Param("width") Long width , @Param("right") Long right);
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId + :width WHERE node.leftNodeId > :right")
-    void MoveLeftSpace(@Param("width") Long width , @Param("newLeftPos") Long right);
+    void MoveLeftSpace(@Param("width") Long width , @Param("right") Long right);
 
     @Modifying
     @Query("DELETE FROM TreeNode AS node  WHERE node.leftNodeId BETWEEN :left AND :right")
@@ -64,11 +65,11 @@ public interface TreeNodeRepository extends JpaRepository<TreeNode, Long> {
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.rightNodeId = node.rightNodeId - :width WHERE node.rightNodeId > :right")
-    void RemoveRightSpace(@Param("width") Long width , @Param("newLeftPos") Long right);
+    void RemoveRightSpace(@Param("width") Long width , @Param("right") Long right);
 
     @Modifying
     @Query("UPDATE TreeNode AS node SET node.leftNodeId = node.leftNodeId - :width WHERE node.leftNodeId > :right")
-    void RemoveLeftSpace(@Param("width") Long width , @Param("newLeftPos") Long right);
+    void RemoveLeftSpace(@Param("width") Long width , @Param("right") Long right);
 
 
 }

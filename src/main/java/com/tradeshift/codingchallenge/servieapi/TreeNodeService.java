@@ -12,11 +12,11 @@ public interface TreeNodeService {
 
     List<TreeNode> findAllTreeNode();
 
-    TreeNode add(TreeNode node , String newPosition ,Boolean addAsChild) throws Exception;
+    TreeNode add(TreeNode node , String newPosition ,String addAsChild) throws Exception;
 
     TreeNode update(TreeNode node);
 
     void delete(long id) throws Exception;
 
-    List<TreeNode> moveSubTree(Map<String, Object> parameters);
+    List<TreeNode> moveSubTree(String newPosition ,String currentNodeName);
 }

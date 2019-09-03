@@ -1,26 +1,25 @@
-version: '3.2'
+version: '2.0'
 services:
-  tradeshift:
-    build: ../../..
-    container_name: "tradeshift"
-    image: debian/latest
+  cc-app:
+    build: .
+    container_name: "cc-app"
     ports:
       - 8080:8080
+    depends_on:
+      - db-mysql
+    networks:
+      - local
+  db-mysql:
+    container_name: mysql
+    image: mysql/mysql-server:5.7
     environment:
-      - spring.datasource.url=jdbc:h2:mem:testdb
-#    links:
-#    depends_on:
-#      - h2
-#
-#  h2:
-#    container_name: 'h2'
-#    hostname: 'h2'
-#    image: 1000kit/h2
-#    ports:
-#      - "8181:8181"
-#      - "1521:1521"
-#    volumes:
-#      - h2-data:/opt/h2-data
-#  volumes:
-#    h2-data:
-  #END
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: Admin@123
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - local
+networks:
+  local:

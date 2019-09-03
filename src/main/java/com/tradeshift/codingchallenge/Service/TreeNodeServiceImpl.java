@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class TreeNodeServiceImpl implements TreeNodeService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TreeNodeServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TreeNodeServiceImpl.class);
 
     @Autowired
     protected TreeNodeRepository treeNodeRepository;
@@ -62,30 +62,50 @@ public class TreeNodeServiceImpl implements TreeNodeService {
     }
 
     @Override
-    public TreeNode add(TreeNode node , String newPosition ,Boolean addAsChild) throws Exception {
+    public TreeNode add(TreeNode node , String newPosition ,String asChild) throws Exception {
         TreeNode treeNodes;
         try {
 
-            TreeNode currentNode = treeNodeRepository.findByName(newPosition).get(0);
+            Boolean addAsChild = Boolean.valueOf(asChild);
+            logger.info("Request add :" + node + " in position :" + newPosition + " as child :" +addAsChild);
+            TreeNode currentNode = treeNodeRepository.findByName(newPosition);
 
-            Long position = currentNode.getRightNodeId();
-
-            if(addAsChild){
-                if(currentNode.getSubNodes() != null && currentNode.getSubNodes().size() != 0){
-                    throw new Exception("Operation Error");
-                }
-                position = currentNode.getLeftNodeId();
+            if(!newPosition.equals("0") && currentNode == null){
+                throw new Exception("The node not found");
             }
 
-            treeNodeRepository.MoveRightSpace(Long.valueOf(2) , position);
-            treeNodeRepository.MoveLeftSpace(Long.valueOf(2)  , position);
+            // add to root
+            if(newPosition.equals("0")){
+              List<TreeNode>  treeNode =  treeNodeRepository.findAllTreeNode();
+              if(treeNode.size() != 0){
+                  throw new Exception("Tree has root node");
+              }
+                node.setLeftNodeId(Long.valueOf(1));
+                node.setRightNodeId(Long.valueOf(2));
+                node.setHeight(Long.valueOf(0) );
+                node.setParentNode(null);
+                node.setRootNode(null);
+            } else {
+                Long position = currentNode.getRightNodeId();
+
+                if(addAsChild){
+                    if(currentNode.getSubNodes() != null && currentNode.getSubNodes().size() != 0){
+                        throw new Exception("Operation Error");
+                    }
+                    position = currentNode.getLeftNodeId();
+                }
+
+                treeNodeRepository.MoveRightSpace(Long.valueOf(2) , position);
+                treeNodeRepository.MoveLeftSpace(Long.valueOf(2)  , position);
 
 
-            node.setLeftNodeId(position + 1);
-            node.setRightNodeId(position + 2);
-            node.setHeight(currentNode.getHeight());
-            node.setParentNode(currentNode.getParentNode());
-            node.setRootNode(currentNode.getRootNode());
+                node.setLeftNodeId(position + 1);
+                node.setRightNodeId(position + 2);
+                node.setHeight( addAsChild == true ? currentNode.getHeight() + 1 : currentNode.getHeight());
+                node.setParentNode( addAsChild == true ? currentNode : currentNode.getParentNode());
+                node.setRootNode(currentNode.getRootNode());
+            }
+
             treeNodes = treeNodeRepository.saveAndFlush(node);
 
         }catch (Exception ex){
@@ -93,7 +113,6 @@ public class TreeNodeServiceImpl implements TreeNodeService {
         }
         return treeNodes;
     }
-
 
     @Override
     public TreeNode update(TreeNode node){
@@ -135,15 +154,12 @@ public class TreeNodeServiceImpl implements TreeNodeService {
      */
     @Override
     @Transactional()
-    public List<TreeNode> moveSubTree(Map<String, Object> parameters){
+    public List<TreeNode> moveSubTree(String newPosition ,String currentNodeName){
         try
         {
-            String leftPositionOfTargeted  = (String)parameters.get("newPosition");
-            String currentName      = (String)parameters.get("currentNode");
-
             //Get Nodes
-            TreeNode currentNode        = treeNodeRepository.findByName(currentName).get(0);
-            TreeNode leftPositionOfTargetedNode   = treeNodeRepository.findByName(leftPositionOfTargeted).get(0);
+            TreeNode currentNode        = treeNodeRepository.findByName(currentNodeName);
+            TreeNode leftPositionOfTargetedNode   = treeNodeRepository.findByName(newPosition);
             TreeNode currentNodeParent = currentNode.getParentNode();
             Long oldRightPos = currentNodeParent.getRightNodeId();
 
@@ -169,7 +185,7 @@ public class TreeNodeServiceImpl implements TreeNodeService {
             for (TreeNode r : moveTree) {
                 r.setLeftNodeId(r.getLeftNodeId() + distance);
                 r.setRightNodeId(r.getRightNodeId() + distance);
-                r.setHeight(r.getHeight() + leftPositionOfTargetedNode.getHeight());
+                r.setHeight(leftPositionOfTargetedNode.getHeight());
             }
             currentNodeParent.setParentNode(leftPositionOfTargetedNode.getParentNode());
 

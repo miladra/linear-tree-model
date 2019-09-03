@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db-mysql:
+    container_name: mysqldb
+    image: mysql:8
+    networks:
+      - coding-net
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE= app
+      - MYSQL_ROOT_USER= root
+      - MYSQL_ROOT_PASSWORD= Admin@123
+      - MYSQL_USER= admin
+      - MYSQL_PASSWORD= Admin@123
+
+  coding-challenge:
+    image: coding-challenge
+    ports:
+      - "8080:8080"
+    networks:
+      - coding-net
+    depends_on:
+      - db-mysql
+
+networks:
+  coding-net:

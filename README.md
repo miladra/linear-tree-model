@@ -8,7 +8,7 @@
    * Liquibase
    * Maven
    * RestTemplate
-   * H2
+   * MySQL
    * swagger
    * Docker
 
@@ -33,6 +33,7 @@ mvn test
 
 ### Run app with docker-compose
 ```
+docker image build -t coding-challenge .
 docker-compose up
 ```
 ### Used Algorithm

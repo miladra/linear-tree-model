@@ -115,14 +115,22 @@ public class TreeNodeServiceImpl implements TreeNodeService {
     }
 
     @Override
-    public TreeNode update(TreeNode node){
-        TreeNode treeNode;
+    public TreeNode update(TreeNode node) throws Exception {
         try {
-            treeNode = treeNodeRepository.saveAndFlush(node);
+            Optional<TreeNode> oldTreeNode = treeNodeRepository.findById(node.getId());
+            if(oldTreeNode.isPresent()) {
+                oldTreeNode.get().setName(node.getName());
+                TreeNode  treeNode = treeNodeRepository.saveAndFlush(oldTreeNode.get());
+                return treeNode;
+            }
+            else {
+                throw new Exception("node not found");
+            }
+
         }catch (Exception ex){
-            throw  ex;
+            throw ex;
         }
-        return treeNode;
+
     }
     @Override
     public void delete(long id) throws Exception {

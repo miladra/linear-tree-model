@@ -1,6 +1,5 @@
 package com.tradeshift.codingchallenge.api;
 
-import com.tradeshift.codingchallenge.Service.TreeNodeServiceImpl;
 import com.tradeshift.codingchallenge.common.exception.BadRequestException;
 import com.tradeshift.codingchallenge.common.exception.NotFoundException;
 import com.tradeshift.codingchallenge.entity.TreeNode;
@@ -13,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/rest/v1")
@@ -25,7 +21,6 @@ import java.util.Map;
 public class ApiTreeNode {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiTreeNode.class);
-
 
     @Autowired
     protected TreeNodeService treeNodeService;
@@ -55,13 +50,10 @@ public class ApiTreeNode {
     }
 
     @ApiOperation(value = "Add new node in tree", response = List.class, tags = "add")
-    @ApiParam(name = "params",  value = "params should have three item first is nodeName which is name of new object of TreeNode " +
-                                        " second is newposition which the node will be add in right side of it" +
-                                        " if you want add new node as children of node which does not have children addAsChild should be true", required = true)
-
-
     @RequestMapping(value = "/nodes/{newPosition}/{addAsChild}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<TreeNode> addNode(@PathVariable("newPosition") String newPosition , @PathVariable("addAsChild") String addAsChild, @RequestBody TreeNode node) {
+    public ResponseEntity<TreeNode> addNode( @ApiParam("the node will be add in right ") @PathVariable("newPosition") String newPosition ,
+                                             @ApiParam("if you want add new node as children of node which does not have children addAsChild should be true") @PathVariable("addAsChild")  String addAsChild,
+                                             @ApiParam("new object of TreeNode") @RequestBody TreeNode node) {
         try{
             logger.info("Request add :" + node.getName() + " in position :" + newPosition + " as child :" +addAsChild);
             TreeNode result = treeNodeService.add(node , newPosition , addAsChild);
@@ -79,18 +71,20 @@ public class ApiTreeNode {
             TreeNode result = treeNodeService.update(node);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }catch (Exception ex){
-            throw new NotFoundException("add new node is not possible");
+            throw new NotFoundException("Update node is not possible");
         }
     }
 
     @ApiOperation(value = "Delete a node", response = List.class, tags = "delete")
     @ApiParam(name = "id", value = "id of TreeNode which you would delete", required = true)
-    @RequestMapping(value = "/nodes/{id}" , method = RequestMethod.DELETE)
-    public void deleteNode(@PathVariable("id") Long id) {
+    @RequestMapping(value = "/nodes/{id}" ,method = RequestMethod.DELETE)
+    public String deleteNode(@PathVariable("id") String id) {
         try{
-            treeNodeService.delete(id);
+
+            treeNodeService.delete(Long.valueOf(id));
+            return "";
         }catch (Exception ex){
-            throw new NotFoundException("add new node is not possible");
+            throw new NotFoundException("Delete new node is not possible" + ex.getStackTrace());
         }
     }
 

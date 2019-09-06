@@ -14,7 +14,7 @@ public interface TreeNodeService {
 
     TreeNode add(TreeNode node , String newPosition ,String addAsChild) throws Exception;
 
-    TreeNode update(TreeNode node);
+    TreeNode update(TreeNode node) throws Exception;
 
     void delete(long id) throws Exception;
 

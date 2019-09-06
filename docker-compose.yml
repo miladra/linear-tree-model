@@ -1,27 +1,35 @@
-version: "3"
+version: '3.3'
 services:
-  db-mysql:
-    container_name: mysqldb
-    image: mysql:8
+  db:
+    container_name: db-mysql
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
     networks:
       - coding-net
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_DATABASE= app
-      - MYSQL_ROOT_USER= root
-      - MYSQL_ROOT_PASSWORD= Admin@123
-      - MYSQL_USER= admin
-      - MYSQL_PASSWORD= Admin@123
-
   coding-challenge:
     image: coding-challenge
+    build: .
     ports:
       - "8080:8080"
     networks:
       - coding-net
     depends_on:
-      - db-mysql
+      - db
+    restart: on-failure
+
+volumes:
+  my-db:
 
 networks:
   coding-net:

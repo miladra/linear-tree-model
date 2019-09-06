@@ -33,8 +33,12 @@ mvn test
 
 ### Run app with docker-compose
 ```
-docker image build -t coding-challenge .
 docker-compose up
+```
+
+if you are use window os may have to execute below command befor docher-compose up
+```
+unix2dos wait-for-something.sh
 ```
 ### Used Algorithm
 The algorithm used for save tree is The Nested Set. I used it to beter performance in read tree, in this approach dont need recursive loop to fetch data, which it has heavy workload on database engine 

@@ -394,16 +394,15 @@ public class ApiTreeNodeTest {
     @Test
     public void DeleteRootTreeNode() {
 
-        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/nodes/{newPosition}/{currentNode}";
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/nodes/{id}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newPosition" , 'A');
-        parameters.put("currentNode" ,'E');
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("id" , "7");
 
-        HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.PATCH, request,  new ParameterizedTypeReference<List<TreeNode>>(){},parameters);
+        HttpEntity<Map> request = new HttpEntity<Map>(headers);
+        ResponseEntity<String> result = restTemplate.exchange(saveUrl, HttpMethod.DELETE, request,  String.class , parameters);
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
@@ -412,25 +411,29 @@ public class ApiTreeNodeTest {
     }
 
     @Test
-    public void UpdateRootTreeNode() {
+    public void UpdateNameOfNode() {
 
-        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/nodes/{newPosition}/{currentNode}";
+        String saveUrl = "http://localhost:" + serverPort + "/rest/v1/nodes";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("newPosition" , 'A');
-        parameters.put("currentNode" ,'E');
+        TreeNode node = new TreeNode();
+        node.setId(4);
+        node.setName("K");
+        node.setHeight(Long.valueOf(0));
+        node.setRightNodeId(Long.valueOf(0));
+        node.setLeftNodeId(Long.valueOf(0));
+        node.setRootNode(null);
+        node.setSubNodes(null);
+        node.setSubRootNodes(null);
+        node.setParentNode(null);
 
-        HttpEntity<Map> request = new HttpEntity<Map>(parameters, headers);
-        ResponseEntity<List<TreeNode>> result = restTemplate.exchange(saveUrl, HttpMethod.PATCH, request,  new ParameterizedTypeReference<List<TreeNode>>(){},parameters);
+        HttpEntity<TreeNode> request = new HttpEntity<TreeNode>(node, headers);
+        ResponseEntity<TreeNode> result = restTemplate.exchange(saveUrl, HttpMethod.PUT, request, TreeNode.class);
 
         assertThat(result.getStatusCode())
                 .as("GET API Node")
                 .isEqualTo(HttpStatus.OK);
 
     }
-
-
-
 }

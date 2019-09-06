@@ -15,28 +15,23 @@
 ### Build Project
 
 ```
-mvn clean install
+Disable maven test and install or package
 ```
-
-### Tests
-The strategy used for the tests was that of integration tests, using the [RestTemplate](https://docs.spring.io/spring-android/docs/current/reference/html/rest-template.html)
-
 ### Swagger
 
 http://localhost:8080/swagger-ui.html
 
+### Tests
+The strategy used for the tests was that of integration tests, using the [RestTemplate](https://docs.spring.io/spring-android/docs/current/reference/html/rest-template.html)
+
 ##### To run tests
 ```
-as used spring faramework just need config Database in application.properties and run test methods in ApiTreeNodeTest
-```
-##### To install 
-```
-as resttemplate used disable maven test and install or package
+Config Database in application.properties and run test methods in ApiTreeNodeTest
 ```
 
 ### Run app with docker-compose
 ```
-after install or package run :
+After install or package run :
 ```
 ```
 docker-compose up

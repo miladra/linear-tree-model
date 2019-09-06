@@ -25,13 +25,19 @@ The strategy used for the tests was that of integration tests, using the [RestTe
 
 http://localhost:8080/swagger-ui.html
 
-
-##### To run 
+##### To run tests
 ```
-mvn clean install
+as used spring faramework just need config Database in application.properties and run test methods in ApiTreeNodeTest
+```
+##### To install 
+```
+as resttemplate used disable maven test and install or package
 ```
 
 ### Run app with docker-compose
+```
+after install or package run :
+```
 ```
 docker-compose up
 ```

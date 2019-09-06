@@ -18,21 +18,17 @@
 Disable maven test and install or package
 ```
 ### Swagger
-
 http://localhost:8080/swagger-ui.html
 
 ### Tests
 The strategy used for the tests was that of integration tests, using the [RestTemplate](https://docs.spring.io/spring-android/docs/current/reference/html/rest-template.html)
 
 ##### To run tests
-```
 Config Database in application.properties and run test methods in ApiTreeNodeTest
-```
+
 
 ### Run app with docker-compose
-```
 After install or package run :
-```
 ```
 docker-compose up
 ```

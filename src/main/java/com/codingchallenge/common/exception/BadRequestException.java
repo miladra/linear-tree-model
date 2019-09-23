@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.common.exception;
+package com.codingchallenge.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

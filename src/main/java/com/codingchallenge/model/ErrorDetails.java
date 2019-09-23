@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.model;
+package com.codingchallenge.model;
 
 import java.util.Date;
 

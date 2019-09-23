@@ -1,6 +1,6 @@
-package com.tradeshift.codingchallenge.api;
+package com.codingchallenge.api;
 
-import com.tradeshift.codingchallenge.entity.TreeNode;
+import com.codingchallenge.entity.TreeNode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

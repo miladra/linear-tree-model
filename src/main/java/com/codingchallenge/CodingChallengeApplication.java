@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge;
+package com.codingchallenge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@ComponentScan(value = "com.tradeshift.codingchallenge")
-@EnableJpaRepositories(basePackages = "com.tradeshift.codingchallenge.repository")
-@EntityScan("com.tradeshift.codingchallenge.entity")
+@ComponentScan(value = "com.codingchallenge")
+@EnableJpaRepositories(basePackages = "com.codingchallenge.repository")
+@EntityScan("com.codingchallenge.entity")
 @EnableTransactionManagement
 public class CodingChallengeApplication {
 

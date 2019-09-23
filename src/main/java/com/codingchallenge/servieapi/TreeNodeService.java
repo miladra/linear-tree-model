@@ -1,10 +1,8 @@
-package com.tradeshift.codingchallenge.servieapi;
+package com.codingchallenge.servieapi;
 
-import com.tradeshift.codingchallenge.entity.TreeNode;
+import com.codingchallenge.entity.TreeNode;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public interface TreeNodeService {
 

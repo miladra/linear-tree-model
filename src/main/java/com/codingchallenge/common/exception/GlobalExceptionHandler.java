@@ -1,6 +1,6 @@
-package com.tradeshift.codingchallenge.common.exception;
+package com.codingchallenge.common.exception;
 
-import com.tradeshift.codingchallenge.model.ErrorDetails;
+import com.codingchallenge.model.ErrorDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

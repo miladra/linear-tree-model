@@ -1,16 +1,16 @@
-# Tradeshift coding challeng
+# The Tree coding challenge
 
 ## Used Stack 
 
    * Spring Boot 2.1.6.RELEASE
    * Java 8
    * Spring Framework
-   * Liquibase
    * Maven
    * RestTemplate
-   * MySQL
+   * MySQL 5.7
    * swagger
-   * Docker
+   * Docker compose
+   * Liquibase (default is disable)
 
 ### Build Project
 
@@ -21,10 +21,10 @@ Disable maven test and install or package
 http://localhost:8080/swagger-ui.html
 
 ### Tests
-The strategy used for the tests was that of integration tests, using the [RestTemplate](https://docs.spring.io/spring-android/docs/current/reference/html/rest-template.html)
+The strategy used for the tests is integration tests, using the [RestTemplate](https://docs.spring.io/spring-android/docs/current/reference/html/rest-template.html)
 
 ##### To run tests
-Config Database in application.properties and run test methods in ApiTreeNodeTest
+Config Database in application.properties and you can run test methods in ApiTreeNodeTest
 
 
 ### Run app with docker-compose

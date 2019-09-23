@@ -1,9 +1,9 @@
-package com.tradeshift.codingchallenge.api;
+package com.codingchallenge.api;
 
-import com.tradeshift.codingchallenge.common.exception.BadRequestException;
-import com.tradeshift.codingchallenge.common.exception.NotFoundException;
-import com.tradeshift.codingchallenge.entity.TreeNode;
-import com.tradeshift.codingchallenge.servieapi.TreeNodeService;
+import com.codingchallenge.common.exception.BadRequestException;
+import com.codingchallenge.common.exception.NotFoundException;
+import com.codingchallenge.entity.TreeNode;
+import com.codingchallenge.servieapi.TreeNodeService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

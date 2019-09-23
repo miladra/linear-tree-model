@@ -1,19 +1,17 @@
-package com.tradeshift.codingchallenge.Service;
+package com.codingchallenge.Service;
 
-import com.tradeshift.codingchallenge.common.exception.BadRequestException;
-import com.tradeshift.codingchallenge.common.exception.NotFoundException;
-import com.tradeshift.codingchallenge.entity.TreeNode;
-import com.tradeshift.codingchallenge.repository.TreeNodeRepository;
-import com.tradeshift.codingchallenge.servieapi.TreeNodeService;
+import com.codingchallenge.entity.TreeNode;
+import com.codingchallenge.repository.TreeNodeRepository;
+import com.codingchallenge.servieapi.TreeNodeService;
+import com.codingchallenge.common.exception.BadRequestException;
+import com.codingchallenge.common.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.common.config;
+package com.codingchallenge.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,7 @@ public class Swagger2UiConfiguration extends WebMvcConfigurerAdapter
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("com.tradeshift.codingchallenge.api"))
+                .apis(RequestHandlerSelectors.basePackage("com.codingchallenge.api"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiEndPointsInfo());
@@ -41,7 +41,7 @@ public class Swagger2UiConfiguration extends WebMvcConfigurerAdapter
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("TradeShift coding challenge")
+        return new ApiInfoBuilder().title("The tree coding challenge")
                 .description("Tree REST API")
                 .contact(new Contact("Miad Ranjbari", "", "miladranjbari@gmail.com"))
                 .license("Apache 2.0")

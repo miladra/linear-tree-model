@@ -1,4 +1,4 @@
-package com.tradeshift.codingchallenge.entity;
+package com.codingchallenge.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;

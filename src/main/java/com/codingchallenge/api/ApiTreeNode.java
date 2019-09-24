@@ -49,7 +49,7 @@ public class ApiTreeNode {
             List<TreeModel> response = TreeModelMapper.INSTANCE.toListOfTreeModel(result);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
-            throw new NotFoundException("Resource not found: " + name);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 

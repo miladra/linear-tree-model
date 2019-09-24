@@ -4,6 +4,7 @@ package com.codingchallenge.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Table(name="TreeNode")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+@Data
 public class TreeNode extends BaseEntity{
 
     @Column(name="Name")
@@ -45,71 +47,6 @@ public class TreeNode extends BaseEntity{
     @ManyToOne
     @JoinColumn(name="rootId" ,referencedColumnName = "id" )
     private TreeNode rootNode;
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getLeftNodeId() {
-        return leftNodeId;
-    }
-
-    public void setLeftNodeId(Long leftNodeId) {
-        this.leftNodeId = leftNodeId;
-    }
-
-    public Long getRightNodeId() {
-        return rightNodeId;
-    }
-
-    public void setRightNodeId(Long rightNodeId) {
-        this.rightNodeId = rightNodeId;
-    }
-
-    public Long getHeight() {
-        return height;
-    }
-
-    public void setHeight(Long height) {
-        this.height = height;
-    }
-
-    public Set<TreeNode> getSubNodes() {
-        return subNodes;
-    }
-
-    public void setSubNodes(Set<TreeNode> subNodes) {
-        this.subNodes = subNodes;
-    }
-
-    public TreeNode getParentNode() {
-        return parentNode;
-    }
-
-    public void setParentNode(TreeNode parentNode) {
-        this.parentNode = parentNode;
-    }
-
-    public Set<TreeNode> getSubRootNodes() {
-        return subRootNodes;
-    }
-
-    public void setSubRootNodes(Set<TreeNode> subRootNodes) {
-        this.subRootNodes = subRootNodes;
-    }
-
-    public TreeNode getRootNode() {
-        return rootNode;
-    }
-
-    public void setRootNode(TreeNode rootNode) {
-        this.rootNode = rootNode;
-    }
 }
 
 

@@ -11,6 +11,8 @@
    * swagger
    * Docker compose
    * Liquibase (default is disable)
+   * lombok
+   * MapStruct
 
 ### Build Project
 

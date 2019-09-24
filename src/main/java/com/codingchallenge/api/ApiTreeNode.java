@@ -1,7 +1,9 @@
 package com.codingchallenge.api;
 
+import com.codingchallenge.Mapper.TreeModelMapper;
 import com.codingchallenge.common.exception.BadRequestException;
 import com.codingchallenge.common.exception.NotFoundException;
+import com.codingchallenge.domain.TreeModel;
 import com.codingchallenge.entity.TreeNode;
 import com.codingchallenge.servieapi.TreeNodeService;
 import io.swagger.annotations.*;
@@ -28,10 +30,11 @@ public class ApiTreeNode {
     @ApiOperation(value = "Get list of all node", response = List.class, tags = "nodes")
     @ApiParam()
     @RequestMapping(value = "/nodes", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<List<TreeNode>> getAllNodes() {
+    public ResponseEntity<List<TreeModel>> getAllNodes() {
         try{
             List<TreeNode> result = treeNodeService.findAllTreeNode();
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            List<TreeModel> response = TreeModelMapper.INSTANCE.toListOfTreeModel(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("Resource not found");
         }
@@ -40,10 +43,11 @@ public class ApiTreeNode {
     @ApiOperation(value = "Get list of node child, by parent node name", response = List.class, tags = "nodes")
     @ApiParam(name = "name", value = "name of node", required = true)
     @RequestMapping(value = "/nodes/{name}", produces = MediaType.APPLICATION_JSON_VALUE , method = RequestMethod.GET)
-    public ResponseEntity<List<TreeNode>> getNode(@PathVariable("name") String name) {
+    public ResponseEntity<List<TreeModel>> getNode(@PathVariable("name") String name) {
         try{
             List<TreeNode> result = treeNodeService.findTreeNodeByName(name);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            List<TreeModel> response = TreeModelMapper.INSTANCE.toListOfTreeModel(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("Resource not found: " + name);
         }
@@ -51,36 +55,38 @@ public class ApiTreeNode {
 
     @ApiOperation(value = "Add new node in tree", response = List.class, tags = "add")
     @RequestMapping(value = "/nodes/{newPosition}/{addAsChild}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public ResponseEntity<TreeNode> addNode( @ApiParam("the node will be add in right ") @PathVariable("newPosition") String newPosition ,
+    public ResponseEntity<TreeModel> addNode( @ApiParam("the node will be add in right ") @PathVariable("newPosition") String newPosition ,
                                              @ApiParam("if you want add new node as children of node which does not have children addAsChild should be true") @PathVariable("addAsChild")  String addAsChild,
-                                             @ApiParam("new object of TreeNode") @RequestBody TreeNode node) {
+                                             @ApiParam("new object of TreeModel") @RequestBody TreeModel node) {
         try{
-            logger.info("Request add :" + node.getName() + " in position :" + newPosition + " as child :" +addAsChild);
-            TreeNode result = treeNodeService.add(node , newPosition , addAsChild);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            TreeNode inputNode = TreeModelMapper.INSTANCE.toTreeNode(node);
+            TreeNode result = treeNodeService.add(inputNode , newPosition , addAsChild);
+            TreeModel response = TreeModelMapper.INSTANCE.toTreeModel(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("add new node is not possible");
         }
     }
 
     @ApiOperation(value = "Update a node", response = List.class, tags = "add")
-    @ApiParam(name = "node", value = "a object of TreeNode type", required = true)
+    @ApiParam(name = "node", value = "a object of TreeModel type", required = true)
     @RequestMapping(value = "/nodes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT)
-    public ResponseEntity<TreeNode> updateNode(@RequestBody TreeNode node) {
+    public ResponseEntity<TreeModel> updateNode(@RequestBody TreeModel node) {
         try{
-            TreeNode result = treeNodeService.update(node);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            TreeNode inputNode = TreeModelMapper.INSTANCE.toTreeNode(node);
+            TreeNode result = treeNodeService.update(inputNode);
+            TreeModel response = TreeModelMapper.INSTANCE.toTreeModel(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new NotFoundException("Update node is not possible");
         }
     }
 
     @ApiOperation(value = "Delete a node", response = List.class, tags = "delete")
-    @ApiParam(name = "id", value = "id of TreeNode which you would delete", required = true)
+    @ApiParam(name = "id", value = "id of TreeModel which you would delete", required = true)
     @RequestMapping(value = "/nodes/{id}" ,method = RequestMethod.DELETE)
     public String deleteNode(@PathVariable("id") String id) {
         try{
-
             treeNodeService.delete(Long.valueOf(id));
             return "";
         }catch (Exception ex){
@@ -91,10 +97,11 @@ public class ApiTreeNode {
     @ApiOperation(value = "Move a sub tree to any position in the tree", tags = "moveSubTree")
     @ApiParam(name = "parameters", value = "It should had two item first is leftPositionOfTargeted it is the left position where the subtree is targeted, and second is current node which its parent will be moved", required = true)
     @RequestMapping(value = "/nodes/{newPosition}/{currentNode}", produces = "application/json", method = RequestMethod.PATCH)
-    public ResponseEntity<List<TreeNode>> moveSubTree(@PathVariable("newPosition") String newPosition , @PathVariable("currentNode") String currentNode) {
+    public ResponseEntity<List<TreeModel>> moveSubTree(@PathVariable("newPosition") String newPosition , @PathVariable("currentNode") String currentNode) {
         try{
             List<TreeNode> result =treeNodeService.moveSubTree(newPosition , currentNode);
-            return new ResponseEntity<>(result, HttpStatus.OK);
+            List<TreeModel> response = TreeModelMapper.INSTANCE.toListOfTreeModel(result);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }catch (Exception ex){
             throw new BadRequestException("Node cannot be updated");
         }

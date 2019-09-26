@@ -1,10 +1,7 @@
 package com.codingchallenge.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +9,6 @@ import java.util.Set;
 @Entity
 @Table(name="TreeNode")
 @Data
-@EqualsAndHashCode
 public class TreeNode extends BaseEntity{
 
     @Column(name="Name")

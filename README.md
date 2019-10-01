@@ -11,9 +11,9 @@
    * swagger
    * Docker compose
    * Liquibase (default is disable)
-   * lombok
+   * Lombok
    * MapStruct
-   * apache-maven-3.6.1
+   * Apache-maven-3.6.1
 
 ### Build Project
 
@@ -35,8 +35,11 @@ docker-compose up --build
 Database url configured to used msql inside docker if you want to run application without docker please config your mysql server application.proerties, so you need change below config
 
 spring.datasource.url=jdbc:mysql://db-mysql:3306/db
+
 spring.datasource.username=user
+
 spring.datasource.password=password
+
 spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
 
 ### Swagger

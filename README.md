@@ -25,8 +25,11 @@ mvn clean install -Dmaven.test.skip=true
 Database url configured to used msql inside docker if you want to run application without docker please config your mysql server application.proerties, so you need change below config
 
 spring.datasource.url=jdbc:mysql://db-mysql:3306/db
+
 spring.datasource.username=user
+
 spring.datasource.password=password
+
 spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
 
 ### Swagger

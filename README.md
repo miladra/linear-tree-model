@@ -17,8 +17,18 @@
 ### Build Project
 
 ```
-Disable maven test and install or package
+mvn clean install -Dmaven.test.skip=true
 ```
+
+### Run Project
+
+Database url configured to used msql inside docker if you want to run application without docker please config your mysql server application.proerties, so you need change below config
+
+spring.datasource.url=jdbc:mysql://db-mysql:3306/db
+spring.datasource.username=user
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
+
 ### Swagger
 http://localhost:8080/swagger-ui.html
 
@@ -30,8 +40,11 @@ Config Database in application.properties and you can run test methods in ApiTre
 
 
 ### Run app with docker-compose
-After install or package run :
+
+In root directory
 ```
+mvn clean install -Dmaven.test.skip=true
+
 docker-compose up
 ```
 

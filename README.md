@@ -1,4 +1,4 @@
-# The Tree coding challenge
+# A model for linearly store a tree 
 
 ## Used Stack 
 
